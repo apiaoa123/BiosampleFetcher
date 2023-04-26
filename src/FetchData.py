@@ -16,7 +16,7 @@ def fetch_data_from_biosample(id):
     try:
         response = request.urlopen(url).read().decode('utf-8')
     except Exception as e:
-        print(f'Error: {e}')
+        print(f'{id}, Error: {e}')
         return "", "", "", str(e)
     Identifiers = get_info(response, "^Ident.*")
     Organism = get_info(response, "^Organ.*")
@@ -27,11 +27,13 @@ def fetch_data_from_biosample(id):
 
 if __name__ == "__main__":
     import os
-    # Load the ids from a csv file that saves the ids
-    ids = pd.read_csv("./idlist-Jie.csv", header=None, usecols=[0])
+    path_idlist = "./idlist-Jie.csv"
+    save_folder = "./BioSample"
+    # Load the ids from a text file that saves the ids
+    ids = pd.read_csv(path_idlist, header=None, usecols=[0])
 
     # Create a folder to store the data
-    os.makedirs("../BioSample", exist_ok=True)
+    os.makedirs(save_folder, exist_ok=True)
     # Loop all the ids
     for id in ids[0]:
         identify, organism, attribute, attributes_context = fetch_data_from_biosample(id)
